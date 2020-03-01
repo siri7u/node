@@ -1,6 +1,6 @@
 'use strict';
 
-const express = require('express');
+/* const express = require('express');
 const socketIO = require('socket.io');
 const path = require("path");
 
@@ -11,8 +11,38 @@ const server = express()
     .use(express.static(path.join(__dirname, '/public')))
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-const io = socketIO(server);
+const io = socketIO(server); */
 
+
+//
+
+
+/* var socketIO = require('socket.io');
+var express = require('express');
+var path = require('path');
+
+
+var app = express()
+const io = socketIO();
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.set('port', (process.env.PORT || 5000));
+
+// Start node server
+app.listen(app.get('port'), function() {
+    console.log('Node server is running on port ' + app.get('port'));
+}); */
+
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
+
+app.use(express.static('public'));
+
+server.listen(process.env.PORT || 5000);
+console.log('Server running...');
 
 
 const players = [];
@@ -52,7 +82,7 @@ io.on('connection', (socket) => {
                 player = players[i];
             }
 
-            //print += "X :" + players[i].x + " Y: " + players[i].y + " ID: " + players[i].id + " .... ";
+            print += "X :" + players[i].x + " Y: " + players[i].y + " ID: " + players[i].id + " .... ";
 
         }
         //console.log(print);
