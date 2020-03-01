@@ -2,16 +2,17 @@
 
 const express = require('express');
 const socketIO = require('socket.io');
+const path = require("path");
 
 const PORT = process.env.PORT || 3000;
-const INDEX = '/index.html';
+const INDEX = '/public/index.html';
 
 const server = express()
-    .use(express.static(__dirname + '/public'))
+    .use(express.static(path.join(__dirname, '/public')))
     .listen(PORT, () => console.log(`Listening on ${PORT}`));
 
-
 const io = socketIO(server);
+
 
 
 const players = [];
@@ -24,16 +25,12 @@ function Player(id, x, y, r) {
 }
 
 
-
-
 io.on('connection', (socket) => {
     console.log('Client connected ' + socket.id);
 
     socket.on('disconnect', () => {
         console.log('Client disconnected & removed from the list')
     });
-
-
 
     socket.on('new-player', function(data) {
         console.log(socket.id + " " + data.x + " " + data.y);
@@ -51,30 +48,24 @@ io.on('connection', (socket) => {
         //console.log(Object.keys(players).length)
         for (var i = 0; i < Object.keys(players).length; i++) {
             if (data.id === players[i].id) {
-                console.log("JOUEUR UPDATE")
+                //console.log("JOUEUR UPDATE")
                 player = players[i];
             }
 
-            print += "X :" + players[i].x + " Y: " + players[i].y + " ID: " + players[i].id + " .... ";
+            //print += "X :" + players[i].x + " Y: " + players[i].y + " ID: " + players[i].id + " .... ";
 
         }
-
-
-        console.log(print);
+        //console.log(print);
         player.x = data.x;
         player.y = data.y;
         player.r = data.r;
 
-
     });
-
 });
 
 
-setInterval(go, 1000);
+setInterval(go, 30);
 
 function go() {
-
     io.sockets.emit('go', players)
-
 }
